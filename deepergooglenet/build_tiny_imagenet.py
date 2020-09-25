@@ -29,8 +29,8 @@ split = train_test_split(trainPaths, trainLabels,
 # load the validation filename => class from file and then use these
 # mappings to build the validation paths and label lists
 M = open(config.VAL_MAPPINGS).read().strip().split("\n")
-M = [r.split("\t")[:2] for r in M]
-valPaths = [os.path.sep.join([config.VAL_IMAGES, m[0]]) for m in M]
+M = [r.split("\t")[:2] for r in M  if r[1] in ('n01443537','n01629819')]
+valPaths = [os.path.sep.join([config.VAL_IMAGES, m[0]]) for m in M if m[1] in ('n01443537','n01629819')]
 valLabels = le.transform([m[1] for m in M])
 
 # construct a list pairing the training, validation, and testing

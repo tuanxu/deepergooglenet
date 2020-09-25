@@ -16,7 +16,8 @@ WORD_LABELS = '../datasets/tiny-imagenet-200/words.txt'
 
 # since we do not have access to the testing data we need to
 # take a number of images from the training data and use it instead
-NUM_CLASSES = 200
+#NUM_CLASSES = 200 
+NUM_CLASSES = 2 #tuan cheat here
 NUM_TEST_IMAGES = 50 * NUM_CLASSES
 
 # define the path to the output training, validation, and testing
