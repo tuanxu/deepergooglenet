@@ -51,29 +51,24 @@ preprocessors=[sp, mp, iap], classes=config.NUM_CLASSES)
 
 # if there is no specific model checkpoint supplied, then initialize
 # the network and compile the model
+
+experiment = "e%d"%args["experiment"]
+print(experiment)
+experiment_epoch = config.EXPERIMENT_CONFIGS[experiment][0]
+experiment_optimize = config.EXPERIMENT_CONFIGS[experiment][1]
+experiment_learning_rate = config.EXPERIMENT_CONFIGS[experiment][2]
+    
+print(experiment_epoch)
+print(experiment_optimize)
+print(experiment_learning_rate)
+opt = ""	
+	
 if args["model"] is None:
     print("[INFO] compiling model....")
     model = DGN.DeeperGoogLeNet.build(width=64, height=64, depth=3, classes=config.NUM_CLASSES, reg=0.0002)
-    #opt = Adam(1e-3)
     
-    #opt = SGD(lr=1e-2,momentum=0.9)#Experiment #1-1
-    #python train.py --checkpoints output/checkpoints
-    
-    #opt = SGD(lr=1e-3,momentum=0.9)#Experiment #1-2
-    #python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_25.hdf5 --start_epoch 25
-    
-    #opt = SGD(lr=1e-4,momentum=0.9)#Experiment #1-3
-    #python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_35.hdf5 --start_epoch 35
-    experiment = "e%d"%args["experiment"]
-    print(experiment)
-    experiment_epoch = config.EXPERIMENT_CONFIGS[experiment][0]
-    experiment_optimize = config.EXPERIMENT_CONFIGS[experiment][1]
-    experiment_learning_rate = config.EXPERIMENT_CONFIGS[experiment][2]
-    
-    print(experiment_epoch)
-    print(experiment_optimize)
-    print(experiment_learning_rate)
-    opt = ""
+
+
     if(experiment[1] == 'Adam'):
         opt = Adam(experiment_learning_rate)#Experiment #2-1
     else:
@@ -87,7 +82,7 @@ else:
     model = load_model(args["model"])
     # update the learning rate
     print("[INFO] old learning rate: {}".format(K.get_value(model.optimizer.lr)))
-    K.set_value(model.optimizer.lr, 1e-5)
+    K.set_value(model.optimizer.lr, experiment_learning_rate)
     print("[INFO] new learning rate: {}".format(K.get_value(model.optimizer.lr)))
 
 # construct the set of callbacks
