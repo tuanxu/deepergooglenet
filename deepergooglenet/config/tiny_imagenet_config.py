@@ -39,4 +39,14 @@ FIG_PATH = path.sep.join([OUTPUT_PATH,
 JSON_PATH = path.sep.join([OUTPUT_PATH,
                            'deepergooglenet_tinyimagenet.json'])
 
-
+EXPERIMENT_CONFIGS = {
+  "e11": [25,'SGD',1e-2,"python train.py --checkpoints output/checkpoints --experiment 11"],
+ "e12": [10,'SGD',1e-3,"python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_25.hdf5 --start_epoch 25 --experiment 12"],
+ "e13": [30,'SGD',1e-4,"python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_35.hdf5 --start_epoch 35 --experiment 13"],
+ "e21": [20,'SGD',1e-3,"python train.py --checkpoints output/checkpoints --experiment 21"],
+ "e22": [10,'SGD',1e-4,"python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_20.hdf5 --start_epoch 20 --experiment 22"],
+"e23": [10,'SGD',1e-5,"python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_30.hdf5 --start_epoch 30 --experiment 23"],
+ "e31": [40,'Adam',1e-3,"python train.py --checkpoints output/checkpoints --experiment 31"],
+ "e32": [20,'Adam',1e-4,"python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_40.hdf5 --start_epoch 40 --experiment 32"],
+"e33": [10,'Adam',1e-5,"python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_60.hdf5 --start_epoch 60 --experiment 33"],  
+}

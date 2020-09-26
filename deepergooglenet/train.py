@@ -26,6 +26,8 @@ ap.add_argument('-m','--model',type=str,
                 help='path to *specific* model checkpoint to load')
 ap.add_argument('-s','--start_epoch',type = int,default=0,
                 help='epoch to restart training at')
+ap.add_argument('-e','--experiment',type = int,default=None,
+                help='epoch to restart training at')
 args=vars(ap.parse_args())
 
 # construct the training image generator for data augmentation
@@ -53,15 +55,31 @@ if args["model"] is None:
     print("[INFO] compiling model....")
     model = DGN.DeeperGoogLeNet.build(width=64, height=64, depth=3, classes=config.NUM_CLASSES, reg=0.0002)
     #opt = Adam(1e-3)
-	
-    #opt = SGD(lr=1e-2,momentum=0.9)#Experiment #1
-	#python train.py --checkpoints output/checkpoints
-	
-    #opt = SGD(lr=1e-3,momentum=0.9)#Experiment #2
-	#python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_25.hdf5 --start_epoch 25
-	
-    opt = SGD(lr=1e-4,momentum=0.9)#Experiment #2
-	#python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_35.hdf5 --start_epoch 35
+    
+    #opt = SGD(lr=1e-2,momentum=0.9)#Experiment #1-1
+    #python train.py --checkpoints output/checkpoints
+    
+    #opt = SGD(lr=1e-3,momentum=0.9)#Experiment #1-2
+    #python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_25.hdf5 --start_epoch 25
+    
+    #opt = SGD(lr=1e-4,momentum=0.9)#Experiment #1-3
+    #python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_35.hdf5 --start_epoch 35
+    experiment = "e%d"%args["experiment"]
+    print(experiment)
+    experiment_epoch = config.EXPERIMENT_CONFIGS[experiment][0]
+    experiment_optimize = config.EXPERIMENT_CONFIGS[experiment][1]
+    experiment_learning_rate = config.EXPERIMENT_CONFIGS[experiment][2]
+    
+    print(experiment_epoch)
+    print(experiment_optimize)
+    print(experiment_learning_rate)
+    opt = ""
+    if(experiment[1] == 'Adam'):
+        opt = Adam(experiment_learning_rate)#Experiment #2-1
+    else:
+        opt = SGD(lr=experiment_learning_rate,momentum=0.9)
+
+
 
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 else:
@@ -83,7 +101,7 @@ model.fit_generator(
     steps_per_epoch=trainGen.numImages // 64,
     validation_data=valGen.generator(),
     validation_steps=valGen.numImages // 64,
-    epochs=30,
+    epochs=experiment_epoch,
     max_queue_size=64 * 2,
     callbacks=callbacks, 
     verbose=1)
