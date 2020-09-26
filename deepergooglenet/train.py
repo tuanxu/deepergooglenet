@@ -13,6 +13,7 @@ from pyimagesearch.io import hdf5datasetgenerator as HDFG
 from pyimagesearch.nn.conv import deepergooglenet as DGN
 from keras.preprocessing.image import ImageDataGenerator
 from keras.optimizers import Adam
+from keras.optimizers import SGD
 from keras.models import load_model
 import keras.backend as K
 import argparse
@@ -51,8 +52,17 @@ preprocessors=[sp, mp, iap], classes=config.NUM_CLASSES)
 if args["model"] is None:
     print("[INFO] compiling model....")
     model = DGN.DeeperGoogLeNet.build(width=64, height=64, depth=3, classes=config.NUM_CLASSES, reg=0.0002)
-    opt = Adam(1e-3)
-    #opt = SGD(lr=1e-4,momentum=0.9)
+    #opt = Adam(1e-3)
+	
+    #opt = SGD(lr=1e-2,momentum=0.9)#Experiment #1
+	#python train.py --checkpoints output/checkpoints
+	
+    #opt = SGD(lr=1e-3,momentum=0.9)#Experiment #2
+	#python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_25.hdf5 --start_epoch 25
+	
+    opt = SGD(lr=1e-4,momentum=0.9)#Experiment #2
+	#python train.py --checkpoints output/checkpoints --model output/checkpoints/epoch_35.hdf5 --start_epoch 35
+
     model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
 else:
     print("[INFO] loading {}...".format(args["model"]))
@@ -73,7 +83,7 @@ model.fit_generator(
     steps_per_epoch=trainGen.numImages // 64,
     validation_data=valGen.generator(),
     validation_steps=valGen.numImages // 64,
-    epochs=10,
+    epochs=30,
     max_queue_size=64 * 2,
     callbacks=callbacks, 
     verbose=1)

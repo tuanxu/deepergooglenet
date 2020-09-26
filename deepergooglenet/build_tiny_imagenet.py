@@ -14,7 +14,15 @@ import os
 # grab the paths to the training images, then extract the training
 # class labels and encode them
 trainPaths = list(paths.list_images(config.TRAIN_IMAGES))
+trainPaths =  [p for p in trainPaths if 
+  p.find('n01443537') != -1
+  or p.find('n01629819') != -1
+  ]
+print(len(trainPaths))
 trainLabels = [p.split(os.path.sep)[-3] for p in trainPaths]
+
+
+
 # one-hot
 le = LabelEncoder()
 trainLabels = le.fit_transform(trainLabels)
@@ -29,8 +37,16 @@ split = train_test_split(trainPaths, trainLabels,
 # load the validation filename => class from file and then use these
 # mappings to build the validation paths and label lists
 M = open(config.VAL_MAPPINGS).read().strip().split("\n")
-M = [r.split("\t")[:2] for r in M  if r[1] in ('n01443537','n01629819')]
-valPaths = [os.path.sep.join([config.VAL_IMAGES, m[0]]) for m in M if m[1] in ('n01443537','n01629819')]
+M = [r.split("\t")[:2] for r in M]#  if r[1] in ('n01443537','n01629819')
+
+
+M =  [p for p in M if 
+  p[1] in ('n01443537','n01629819')
+  ]
+
+valPaths = [os.path.sep.join([config.VAL_IMAGES, m[0]]) for m in M] # if m[1] in ('n01443537','n01629819')
+
+print('valPaths = %d'%len(valPaths))
 valLabels = le.transform([m[1] for m in M])
 
 # construct a list pairing the training, validation, and testing
